@@ -8,7 +8,7 @@ e.CACHE_LEVEL = 10
 
 local function Weekly()
 	e.GetBestClear()
-	if AstralCharacters[e.CharacterID()].level >= e.CACHE_LEVEL then
+	if AstralCharacters[e.GetCharacterID(e.Player())].level >= e.CACHE_LEVEL then
 		SendAddonMessage('AstralKeys', 'updateWeekly 1', 'GUILD')
 	end
 	e.UpdateCharacterFrames()
@@ -17,7 +17,6 @@ end
 local function InitData()
 	if UnitLevel('player') ~= 110 then return end -- Character isn't max level, anything from them is useless
 	e.GetBestClear()
-	e.SetCharacterID()
 	e.FindKeyStone(true, false)
 	e.BuildMapTable()
 	SendAddonMessage('AstralKeys', 'request', 'GUILD')
@@ -40,8 +39,9 @@ AstralEvents:Register('CHALLENGE_MODE_COMPLETED', function()
 end, 'dungeonCompleted')
 
 local function CompletedWeekly()
-	if not e.CharacterID() then return 0 end
-	if AstralCharacters[e.CharacterID()]['level'] and AstralCharacters[e.CharacterID()].level >= e.CACHE_LEVEL then
+	local id = e.GetCharacterID(e.Player())
+	if not id then return 0 end
+	if AstralCharacters[id]['level'] and AstralCharacters[id].level >= e.CACHE_LEVEL then
 		return 1
 	else
 		return 0
@@ -155,35 +155,15 @@ end
 function e.GetCharacterKey(unit)
 	if not unit then return '' end
 
-	for i = 1, #AstralKeys do
-		if AstralKeys[i][1] == unit then
-			return CreateKeyText(AstralKeys[i][3], AstralKeys[i][4])
-		end
+	local id = e.UnitID(unit)
+	if id then return CreateKeyText(AstralKeys[id][3], AstralKeys[id][4])
+	else
+		return WrapTextInColorCode('No key found.', 'ff9d9d9d')
 	end
-
-	return WrapTextInColorCode('No key found.', 'ff9d9d9d')
-
 end
 
-function e.GetBestKey(id)
-	return AstralCharacters[id].level
-end
-
-function e.GetBestMap(unit)
-
-	for i = 1, #AstralCharacters do
-		if AstralCharacters[i].name == unit then
-			if AstralCharacters[i].map ~= 0 then
-				return e.GetMapName(AstralCharacters[i].map)
-			end
-		end
-	end
-	
-	return 'No mythic+ ran this week.'
-end
-
---Returns map ID and keystone level run for current week
-
+-- Finds best map clear fothe week for logged on character. If character already is in database
+-- updates the information, else creates new entry for character
 function e.GetBestClear()
 	if UnitLevel('player') ~= 110 then return end
 	local bestLevel = 0
@@ -198,10 +178,21 @@ function e.GetBestClear()
 		end
 	end
 
+	--[[
 	if #AstralCharacters == 0 then
 		table.insert(AstralCharacters, {name = e.PlayerName(), class = e.PlayerClass(), realm = e.PlayerRealm(), map = bestMap, level = bestLevel, knowledge = e.GetAKBonus(e.ParseAKLevel())})
 	end
-
+	
+	]]
+	local id = e.GetCharacterID(e.Player())
+	if id then
+		AstralCharacters[id].map = bestMap
+		AstralCharacters[id].level = bestLevel
+	else
+		table.insert(AstralCharacters, {unit = e.Player(), class = e.PlayerClass(), map = bestMap, level = bestLevel})
+		e.SetCharacterID(e.Player(), #AstralCharacters)
+	end
+	--[[
 	local index = -1
 	for i = 1, #AstralCharacters do
 		if AstralCharacters[i]['name'] == e.PlayerName() and AstralCharacters[i].realm == e.PlayerRealm() then
@@ -214,6 +205,7 @@ function e.GetBestClear()
 	if index == -1 then
 		table.insert(AstralCharacters, {name = e.PlayerName(), class = e.PlayerClass(), realm = e.PlayerRealm(), map = bestMap, level = bestLevel, knowledge = e.GetAKBonus(e.ParseAKLevel())})
 	end
+	]]
 end
 
 -- Deprecated

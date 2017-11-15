@@ -101,7 +101,7 @@ local function UpdateUnitKey(msg)
 	e.UpdateFrames()
 	
 	if unit == strformat('%s-%s', e.PlayerName(), e.PlayerRealm()) then
-		e.SetPlayerID()
+		e.SetPlayerUnitID()
 		e.UpdateCharacterFrames()
 	end
 end
@@ -143,7 +143,7 @@ local function SyncReceive(entry)
 				AstralKeys[#AstralKeys + 1] = {unit, class, dungeonID, keyLevel, weekly, week, timeStamp}
 				e.SetUnitID(unit, #AstralKeys)
 				if unit == strformat('%s-%s', e.PlayerName(), e.PlayerRealm()) then
-					e.SetPlayerID()
+					e.SetPlayerUnitID()
 				end
 			end
 		end
@@ -167,7 +167,7 @@ local ticker = {}
 local function PushKeyList(...)
 	if ticker['_remainingIterations'] and ticker['_remainingIterations'] > 0 then ticker:Cancel() end
 	local sender = select(5, ...)
-	if sender == string.format('%s-%s', e.PlayerName(), e.PlayerRealm()) then return end
+	if sender == e.Player() then return end
 	wipe(messageStack)
 	wipe(messageQueue)
 	for i = 1, #AstralKeys do
@@ -227,9 +227,9 @@ local function ResetAK()
 	AstralKeysSettings['reset'] = false
 	e.WipeUnitList()
 	e.WipeFrames()
-	e.SetPlayerID()
+	--e.SetPlayerUnitID()
 	e.FindKeyStone(true)
-	e.SetCharacterID()
+	--e.SetCharacterID(e.Player, #AstralCharacters)
 	e.UpdateAffixes()
 	C_Timer.After(.75, function()
 		e.UpdateCharacterFrames()

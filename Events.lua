@@ -62,15 +62,15 @@ end
 
 -- Gets function bound to event
 -- @param event Event to be queried
--- @param callback Object name to be retrieved
+-- @param handler Object name to be retrieved
 -- @return Function
 
-function AstralEvents:GetRegisteredFunction(event, callback)
+function AstralEvents:GetRegisteredFunction(event, handler)
 	local objs = self.dtbl[event]
 	if not objs then return end
 
-	if objs[callback] then
-		return objs[callback].method
+	if objs[handler] then
+		return objs[handler].method
 	else
 		return nil
 	end

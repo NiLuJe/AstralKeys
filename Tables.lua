@@ -66,7 +66,6 @@ function e.SortTable(A, v)
 	end
 end
 
-
 function e.DeepCopy(orig)
     local orig_type = type(orig)
     local copy
