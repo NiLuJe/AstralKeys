@@ -108,7 +108,6 @@ local function CreateCharacterFrame(parent, frameName, unitName, bestKey, create
 	frame:SetSize(210, 31)
 	frame:SetFrameLevel(5)
 
-	frame.tid = ''
 	frame.unit = unitName
 	frame.bestKey = ''
 	frame.currentKey = ''
@@ -161,8 +160,10 @@ local function CreateCharacterFrame(parent, frameName, unitName, bestKey, create
 			self.bestMap = e.GetCharacterBestMap(characterID)
 			self.weeklyAP = e.GetWeeklyAP(self.bestKey)
 
+			self.keystone.string:SetText(e.GetCharacterKey(self.unit .. '-' .. self.realm))
+
 			if self.realm ~= e.PlayerRealm() then
-				self.unit = self.unit .. '(*)'
+				self.unit = self.unit .. ' (*)'
 			end
 
 			if self.bestKey ~= 0 then
@@ -170,7 +171,6 @@ local function CreateCharacterFrame(parent, frameName, unitName, bestKey, create
 			else
 				self.name.string:SetText(WrapTextInColorCode(self.unit, select(4, GetClassColor(self.unitClass))))
 			end
-			self.keystone.string:SetText(e.GetCharacterKey(self.unit .. '-' .. self.realm))
 		else
 			self.name.string:SetText('')
 			self.keystone.string:SetText('')
@@ -179,7 +179,6 @@ local function CreateCharacterFrame(parent, frameName, unitName, bestKey, create
 	end
 
 	frame:SetScript('OnEnter', function(self)
-		if not self.tid then return end
 
 		if self.weeklyAP > 0 then
 			astralMouseOver:SetText(e.GetMapName(self.bestMap) .. '\n- ' .. e.ConvertToSI(self.weeklyAP * e.GetAKBonus()) .. ' AP in cache')
@@ -1088,7 +1087,7 @@ function e.UpdateCharacterFrames()
 	else
 		for i = 1, #characters do
 			if characterTable[i] then
-				characters[i]:UpdateInformation(e.GetCharacterID(characterTable[i + characterOffset - 1].unit))
+				characters[i]:UpdateInformation(e.GetCharacterID(characterTable[i + characterOffset].unit))
 			else
 				characters[i]:UpdateInformation('')
 			end

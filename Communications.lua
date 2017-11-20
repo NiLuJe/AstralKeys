@@ -1,22 +1,42 @@
 local ADDON, e = ...
 
+local find, sub, strformat = string.find, string.sub, string.format
+
+-- Variables for syncing information
+-- Will only accept information from other clients with same version settings
 local SYNC_VERSION = 'sync4'
 e.UPDATE_VERSION = 'updateV7'
 
 local versionList = {}
+local highestVersion = 0
+
 local messageStack = {}
 local messageQueue = {}
 local messageContents = {}
-local highestVersion = 0
-local find, sub, strformat = string.find, string.sub, string.format
+
+-- New key announce message
+-- TODO: add option to change message to something else
 local ANNOUNCE_MESSAGE = 'Astral Keys: New key %s + %d'
+
+-- Interval times for syncing keys between clients
+-- Two different time settings for in a raid or otherwise
+-- Creates a random variance between +- [.200, .500] to help prevent
+-- disconnects from too many addon messages
+local send_variance = ((-1)^math.random(1,2)) * math.modf( math.random(200, 500))/ 10^3 -- random number to space out messages being sent between clients
+local SEND_INTERVAL = {}
+SEND_INTERVAL[1] = 1 + send_variance
+SEND_INTERVAL[2] = 4 + send_variance
+
+-- Current setting to be used
+-- Changes when player enters a raid instance or not
+local SEND_INTERVAL_SETTING = 1 -- What intervel to use for sending key information
 
 AstralComs = CreateFrame('FRAME')
 AstralComs:RegisterEvent('CHAT_MSG_ADDON')
 AstralComs.dtbl = {}
 
 function AstralComs:RegisterPrefix(channel, prefix, f)
-	if not channel then channel = 'GUILD' end
+	if not channel then channel = 'GUILD' end -- Default to guild as channel if none is specified
 	if self:IsPrefixRegistered(channel, prefix) then return end
 
 	if not self.dtbl[channel] then self.dtbl[channel] = {} end
@@ -33,8 +53,8 @@ function AstralComs:UnregisterPrefix(channel, prefix)
 	if not objs then return end
 	for id, obj in pairs(objs) do
 		if obj.prefix == prefix then
-			table.remove(objs, id)
-			--objs[id] = nil
+			--table.remove(objs, id)
+			objs[id] = nil
 			break
 		end
 	end
@@ -110,7 +130,9 @@ AstralComs:RegisterPrefix('GUILD', e.UPDATE_VERSION, UpdateUnitKey)
 local updateTicker = {}
 local function SyncReceive(entry)
 	local unit, class, dungeonID, keyLevel, weekly, week, timeStamp
-	if updateTicker['_remainingIterations'] and updateTicker['_remainingIterations'] > 0 then updateTicker:Cancel() end
+	if AstralKeyFrame:IsShown() then
+		if updateTicker['_remainingIterations'] and updateTicker['_remainingIterations'] > 0 then updateTicker:Cancel() end
+	end
 	updateTicker = C_Timer.NewTicker(.75, e.UpdateFrames, 1)
 
 	local _pos = 0
@@ -181,7 +203,7 @@ local function PushKeyList(...)
 	messageQueue[index] = ''
 	while messageStack[1] do		
 		local nextMessage = strformat('%s%s', messageQueue[index], messageStack[1])
-		if nextMessage:len() < 245 then
+		if nextMessage:len() < 244 then
 			messageQueue[index] = nextMessage
 			table.remove(messageStack, 1)
 		else
@@ -202,7 +224,7 @@ local function PushKeyList(...)
 	end
 
 	local tickerIterations = math.ceil(#messageQueue/5)
-	ticker = C_Timer.NewTicker(1, SendEntries, tickerIterations)
+	ticker = C_Timer.NewTicker(SEND_INTERVAL[SEND_INTERVAL_SETTING], SendEntries, tickerIterations)
 end
 
 AstralComs:RegisterPrefix('GUILD', 'request', PushKeyList)
@@ -227,9 +249,7 @@ local function ResetAK()
 	AstralKeysSettings['reset'] = false
 	e.WipeUnitList()
 	e.WipeFrames()
-	--e.SetPlayerUnitID()
 	e.FindKeyStone(true)
-	--e.SetCharacterID(e.Player, #AstralCharacters)
 	e.UpdateAffixes()
 	C_Timer.After(.75, function()
 		e.UpdateCharacterFrames()
@@ -291,3 +311,24 @@ function e.VersionCheck()
 	if timer then timer:Cancel() end
 	timer =  C_Timer.NewTicker(3, function() PrintVersion() AstralComs:UnregisterPrefix('GUILD', 'versionPush') end, 1)
 end
+
+local function CheckRaid()
+	--DO SOMETHING
+end
+
+AstralEvents:Register('ENCOUNTER_START', function()
+	AstralComs:UnregisterPrefix('GUILD', 'request')
+	end, 'encStart')
+
+AstralEvents:Register('ENCOUNTER_STOP', function()
+	AstralComs:RegisterPrefix('GUID', 'request', PushKeyList)
+	end, 'encStop')
+
+AstralEvents:Register('PLAYER_ENTERING_WORLD', function()
+	local inInstance, instanceType = IsInInstance()
+	if inInstance and instanceType == 'raid' then
+		SEND_INTERVAL_SETTING = 2
+	else
+		SEND_INTERVAL_SETTING = 1
+	end
+	end, 'entering_world')

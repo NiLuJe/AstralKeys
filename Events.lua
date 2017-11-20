@@ -10,7 +10,7 @@ AstralEvents.dtbl = {}
 function AstralEvents:NewObject(f, name)
 	local obj = {}
 
-	obj.name = name or 'nil'
+	obj.name = name or 'anon'
 	obj.method = f
 
 	return obj
@@ -29,7 +29,6 @@ function AstralEvents:Register(event, f, name)
 		AstralEvents:RegisterEvent(event)
 	end
 	self.dtbl[event][name] = obj
-	--table.insert(self.dtbl[event], obj)
 end
 
 -- Unregisters function from being called on event
@@ -63,8 +62,7 @@ end
 -- Gets function bound to event
 -- @param event Event to be queried
 -- @param handler Object name to be retrieved
--- @return Function
-
+-- @return function The function pertaining to the given handler for said event
 function AstralEvents:GetRegisteredFunction(event, handler)
 	local objs = self.dtbl[event]
 	if not objs then return end

@@ -22,11 +22,8 @@ end
 -- Retrieves character's name
 -- @return string Character's name
 function e.CharacterName(id)
-	return Ambiguate(AstralCharacters[id].unit, 'GUILD')
+	return AstralCharacters[id].unit:sub(1, AstralCharacters[id].unit:find('-') - 1)
 end
-
-
--- WTF IS THIS FOR FUCK THIS SHIT YO
 
 -- Retrieves character ID
 -- unit string Character name
@@ -34,16 +31,6 @@ end
 function e.GetCharacterID(unit)
 	return characterList[unit] or false
 end
-
---[[
-function e.GetCharacterID(unit)
-	for i = 1, #AstralCharacters do
-		if AstralCharacters[i].name == unit and AstralCharacters[i].realm == realm then
-			return i
-		end
-	end
-end
-]]
 
 -- Retrieves character class
 -- id int ID for character
@@ -66,6 +53,13 @@ end
 -- @return int 0 implies no key run for the week
 function e.GetCharacterBestMap(id)
 	return AstralCharacters[id].map 
+end
+
+-- Retrieves faction for character
+-- @param id int ID for the character
+-- @return string Non-localized faction name
+function e.GetCharacterFaction(id)
+	return AstralCharacters[id].faction
 end
 
 -- Sets player name variable

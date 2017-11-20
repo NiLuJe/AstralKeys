@@ -4,7 +4,7 @@ local strformat = string.format
 local GRAY = 'ff9d9d9d'
 local PURPLE = 'ffa335ee'
 
-e.CACHE_LEVEL = 10
+e.CACHE_LEVEL = 10 -- Weekly M+ requirement for class hall cache
 
 local function Weekly()
 	e.GetBestClear()
@@ -62,7 +62,6 @@ function e.GetKeyInfo()
 	end
 
 	return mapID, keyLevel, a1, a2, a3
-
 end
 
 function e.FindKeyStone(sendUpdate, anounceKey)
@@ -131,19 +130,16 @@ function e.FindKeyStone(sendUpdate, anounceKey)
 	end
 end
 
-local function CreateKeyText(mapID, level)
-		return level .. ' ' .. C_ChallengeMode.GetMapInfo(mapID)
-end
-
 -- Parses item link to get mapID, key level, affix1, affix2, affix3
 -- @param link Item Link for keystone
 -- return mapID, keyLevel, affix1, affix2, affix3 Integer values
 
 function e.ParseLink(link)
-	if not link:find('keystone') then return end -- Not a keystone link, don't do anything
+	if not link:find('keystone') then return end -- Not a keystone link, don't do anything, also something went wrong shouldn't be here if not keystone link
 	local delink = link:gsub('\124', '\124\124')
-	local mapID, keyLevel, affix1, affix2, affix3 = delink:match(':(%d+):(%d+):(%d+):(%d+):(%d+)')
-	return mapID, keyLevel, affix1, affix2, affix3
+	--local mapID, keyLevel, affix1, affix2, affix3 = delink:match(':(%d+):(%d+):(%d+):(%d+):(%d+)')
+	--return mapID, keyLevel, affix1, affix2, affix3
+	return delink:match(':(%d+):(%d+):(%d+):(%d+):(%d+)')
 end
 
 function e.GetUnitKeyByID(id)
@@ -156,7 +152,9 @@ function e.GetCharacterKey(unit)
 	if not unit then return '' end
 
 	local id = e.UnitID(unit)
-	if id then return CreateKeyText(AstralKeys[id][3], AstralKeys[id][4])
+	
+	if id then 
+		return AstralKeys[id][4] .. ' ' .. C_ChallengeMode.GetMapInfo(AstralKeys[id][3]) -- 4:: key level 3:: mapID
 	else
 		return WrapTextInColorCode('No key found.', 'ff9d9d9d')
 	end
@@ -178,34 +176,14 @@ function e.GetBestClear()
 		end
 	end
 
-	--[[
-	if #AstralCharacters == 0 then
-		table.insert(AstralCharacters, {name = e.PlayerName(), class = e.PlayerClass(), realm = e.PlayerRealm(), map = bestMap, level = bestLevel, knowledge = e.GetAKBonus(e.ParseAKLevel())})
-	end
-	
-	]]
 	local id = e.GetCharacterID(e.Player())
 	if id then
 		AstralCharacters[id].map = bestMap
 		AstralCharacters[id].level = bestLevel
 	else
-		table.insert(AstralCharacters, {unit = e.Player(), class = e.PlayerClass(), map = bestMap, level = bestLevel})
+		table.insert(AstralCharacters, {unit = e.Player(), class = e.PlayerClass(), map = bestMap, level = bestLevel, faction = UnitFactionGroup('player')})
 		e.SetCharacterID(e.Player(), #AstralCharacters)
 	end
-	--[[
-	local index = -1
-	for i = 1, #AstralCharacters do
-		if AstralCharacters[i]['name'] == e.PlayerName() and AstralCharacters[i].realm == e.PlayerRealm() then
-			AstralCharacters[i].map = bestMap
-			AstralCharacters[i].level = bestLevel
-			index = i
-		end
-	end
-
-	if index == -1 then
-		table.insert(AstralCharacters, {name = e.PlayerName(), class = e.PlayerClass(), realm = e.PlayerRealm(), map = bestMap, level = bestLevel, knowledge = e.GetAKBonus(e.ParseAKLevel())})
-	end
-	]]
 end
 
 -- Deprecated
