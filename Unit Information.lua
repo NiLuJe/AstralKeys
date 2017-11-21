@@ -52,6 +52,13 @@ function e.WipeUnitList()
 	wipe(unitList)
 end
 
+-- Retrieves unit from database
+-- @param id int ID for said unit
+-- @return str Unit name and realm, ex  'Phrike-Turalyon'
+function e.Unit(id)
+	return AstralKeys[id][1]
+end
+
 -- Retrieves unit's realm from unit string
 -- @param id int for unit
 function e.UnitRealm(id)

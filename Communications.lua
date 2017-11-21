@@ -1,6 +1,7 @@
 local ADDON, e = ...
 
 local find, sub, strformat = string.find, string.sub, string.format
+local SendAddonMessage = SendAddonMessage
 
 -- Variables for syncing information
 -- Will only accept information from other clients with same version settings
@@ -302,7 +303,7 @@ local timer
 function e.VersionCheck()
 	if not IsInGuild() then return end
 	if not AstralComs:IsPrefixRegistered('GUILD', 'versionPush') then
-		AstralComs:RegisterPrefix('GUILD', 'versionPush', VersionPush)
+		AstralComs:RegisterPrefix('GUILD', 'versionPush', VersionPush) -- lazy way to do this,
 	end
 
 	highestVersion = 0
@@ -312,18 +313,20 @@ function e.VersionCheck()
 	timer =  C_Timer.NewTicker(3, function() PrintVersion() AstralComs:UnregisterPrefix('GUILD', 'versionPush') end, 1)
 end
 
-local function CheckRaid()
-	--DO SOMETHING
-end
-
+-- Let's just disable sending information if we are doing a boss fight
+-- but keep updating individual keys if we receive them
+-- keep the addon channel overhead low
 AstralEvents:Register('ENCOUNTER_START', function()
 	AstralComs:UnregisterPrefix('GUILD', 'request')
 	end, 'encStart')
 
+-- Boss is over, let's send informatino once again
 AstralEvents:Register('ENCOUNTER_STOP', function()
 	AstralComs:RegisterPrefix('GUID', 'request', PushKeyList)
 	end, 'encStop')
 
+-- Checks to see if we zone into a raid instance,
+-- Let's increase the send interval if we are raiding, client sync can wait, dc's can't
 AstralEvents:Register('PLAYER_ENTERING_WORLD', function()
 	local inInstance, instanceType = IsInInstance()
 	if inInstance and instanceType == 'raid' then

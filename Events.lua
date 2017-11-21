@@ -10,7 +10,7 @@ AstralEvents.dtbl = {}
 function AstralEvents:NewObject(f, name)
 	local obj = {}
 
-	obj.name = name or 'anon'
+	obj.name = name or 'anonymous'
 	obj.method = f
 
 	return obj

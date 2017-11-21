@@ -207,6 +207,24 @@ local keyFrames = {}
 local mapFrames = {}
 local completedFrames = {}
 
+local function CreateUnitFrame(parent, unitID)
+	local frame = CreateFrame('FRAME', nil, UIParent)
+	frame:SetSize(500, 15)
+
+	local unitID = unitID
+
+	local name = e.UnitName(unitID)
+	local server = e.UnitServer(unitID)
+	local class = e.UnitClass(unitID)
+	
+
+
+
+
+
+
+end
+
 local function CreateNameFrame(parent, unitName, unitClass)
 	local frame = CreateFrame('FRAME', nil, parent)
 	frame:SetSize(110, 15)
@@ -249,7 +267,6 @@ local function CreateNameFrame(parent, unitName, unitClass)
 	end
 
 	return frame
-
 end
 
 local function CreateMapFrame(parent, mapID, keyLevel)
@@ -296,7 +313,6 @@ local function CreateMapFrame(parent, mapID, keyLevel)
  		end)
 
 	return frame
-
 end
 
 local function CreateKeyFrame(parent, keyLevel)
@@ -321,7 +337,6 @@ local function CreateKeyFrame(parent, keyLevel)
 	end
 
 	return frame
-
 end
 
 local function CreateCompleteFrame(parent, completed)
