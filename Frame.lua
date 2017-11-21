@@ -948,10 +948,9 @@ local function InitializeFrame()
 	end
 
 	local id = e.GetCharacterID(e.Player())
-	local endIndex
 
-	if id then
-
+	-- Only create 9 character frames in total, first is reserved for current logged in character if 
+	if id then -- We are logged into a character that has a key
 		characters[1] = CreateCharacterFrame(characterFrame, nil, characterTable[id].unit, nil, false)
 		characters[1]:SetPoint('TOPLEFT', characterHeader, 'BOTTOMLEFT', 0, -5)
 
@@ -959,28 +958,17 @@ local function InitializeFrame()
 		characterContent:SetPoint('TOPLEFT', characterHeader, 'BOTTOMLEFT', 0, -39)
 
 		table.remove(characterTable, id)
-
-		if #characterTable < 9 then
-			endIndex = #characterTable
-		else
-			endIndex = 8
 		end
 
-		for i = 1, endIndex do
+		for i = 1, math.min(#characterTable, 8) do -- Only 8 left character slots to make
 			characters[i+1] = CreateCharacterFrame(characterFrame, nil, characterTable[i].unit, nil, false)
 			characters[i+1]:SetPoint('TOPLEFT', characterContent, 'TOPLEFT', 0, -34*(i - 1) - 4)
 		end
-	else
+	else -- No key on said character, make 9 slots for characters
 		characterContent:SetSize(215, 290)
 		characterContent:SetPoint('TOPLEFT', characterHeader, 'BOTTOMLEFT', 0, -5)
 
-		if #characterTable < 10 then
-			endIndex = #characterTable
-		else
-			endIndex = 9
-		end
-
-		for i = 1, endIndex do
+		for i = 1, math.min(#characterTable, 9) do
 			characters[i] = CreateCharacterFrame(characterFrame, nil, characterTable[i].unit, nil, false)
 			characters[i]:SetPoint('TOPLEFT', characterContent, 'TOPLEFT', 0, -34*(i-1) - 4)
 		end
@@ -995,7 +983,7 @@ local function InitializeFrame()
 	end
 
 	characterContent:SetScript('OnMouseWheel', function(self, delta)
-		if #characterTable < 9 then return end
+		if #characterTable < 9 then return end -- There aren't more characters than frames, no need to scroll
 
 		if delta < 0 then -- Scroll down
 			if (#characterTable - characterOffset) > 8 then
