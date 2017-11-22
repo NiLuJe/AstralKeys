@@ -958,7 +958,6 @@ local function InitializeFrame()
 		characterContent:SetPoint('TOPLEFT', characterHeader, 'BOTTOMLEFT', 0, -39)
 
 		table.remove(characterTable, id)
-		end
 
 		for i = 1, math.min(#characterTable, 8) do -- Only 8 left character slots to make
 			characters[i+1] = CreateCharacterFrame(characterFrame, nil, characterTable[i].unit, nil, false)

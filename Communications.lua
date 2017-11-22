@@ -32,7 +32,7 @@ SEND_INTERVAL[2] = 4 + send_variance
 -- Changes when player enters a raid instance or not
 local SEND_INTERVAL_SETTING = 1 -- What intervel to use for sending key information
 
-AstralComs = CreateFrame('FRAME')
+AstralComs = CreateFrame('FRAME', 'AstralComs')
 AstralComs:RegisterEvent('CHAT_MSG_ADDON')
 AstralComs.dtbl = {}
 
