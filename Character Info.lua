@@ -7,12 +7,6 @@ function e.SetCharacterID(unit, unitID)
 	characterList[unit] = unitID
 end
 
--- Retrieve character's knowledge multiplier
--- @return int Value of artifact knowledge
-function e.CharacterAK(id)
-	return AstralCharacters[id].knowledge
-end
-
 -- Retrieves character's realm
 -- @return string Realm name for character
 function e.CharacterRealm(id)

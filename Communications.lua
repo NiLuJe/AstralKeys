@@ -25,7 +25,7 @@ local ANNOUNCE_MESSAGE = 'Astral Keys: New key %s + %d'
 -- disconnects from too many addon messages
 local send_variance = ((-1)^math.random(1,2)) * math.modf( math.random(200, 500))/ 10^3 -- random number to space out messages being sent between clients
 local SEND_INTERVAL = {}
-SEND_INTERVAL[1] = 1 + send_variance
+SEND_INTERVAL[1] = 0.6 + send_variance
 SEND_INTERVAL[2] = 4 + send_variance
 
 -- Current setting to be used
@@ -96,7 +96,7 @@ function e.AnnounceNewKey(keyLink, level)
 end
 
 local function UpdateUnitKey(msg)
-	local timeStamp = e.WeekTime()
+	local timeStamp = e.WeekTime() -- part of the week we got this key update, used to determine if a key got de-leveled or not
 	local unit = msg:sub(0, msg:find(':') - 1)
 	local class, dungeonID, keyLevel, weekly, week = msg:match('(%a+):(%d+):(%d+):(%d+):(%d+)', msg:find(':'))
 	
@@ -121,8 +121,7 @@ local function UpdateUnitKey(msg)
 
 	e.UpdateFrames()
 	
-	if unit == strformat('%s-%s', e.PlayerName(), e.PlayerRealm()) then
-		e.SetPlayerUnitID()
+	if unit == e.Player() then
 		e.UpdateCharacterFrames()
 	end
 end
@@ -165,9 +164,6 @@ local function SyncReceive(entry)
 			else
 				AstralKeys[#AstralKeys + 1] = {unit, class, dungeonID, keyLevel, weekly, week, timeStamp}
 				e.SetUnitID(unit, #AstralKeys)
-				if unit == strformat('%s-%s', e.PlayerName(), e.PlayerRealm()) then
-					e.SetPlayerUnitID()
-				end
 			end
 		end
 	end
@@ -194,7 +190,7 @@ local function PushKeyList(...)
 	wipe(messageStack)
 	wipe(messageQueue)
 	for i = 1, #AstralKeys do
-		if e.UnitInGuild(AstralKeys[i][1]) then
+		if e.UnitInGuild(AstralKeys[i][1]) then -- Only send current guild keys, who wants keys from a different guild?
 			messageStack[#messageStack + 1] = strformat('%s_', strformat('%s:%s:%d:%d:%d:%d:%d', AstralKeys[i][1], AstralKeys[i][2], AstralKeys[i][3], AstralKeys[i][4], AstralKeys[i][5], AstralKeys[i][6], AstralKeys[i][7]))
 		end
 	end
@@ -214,17 +210,13 @@ local function PushKeyList(...)
 	end
 
 	local function SendEntries()
-		for i = 1, 5 do
-			if messageQueue[1] and messageQueue[1] ~= '' then
-				SendAddonMessage('AstralKeys', strformat('%s %s', SYNC_VERSION, messageQueue[1]), 'GUILD')
-				table.remove(messageQueue, 1)
-			else
-				break
-			end
+		if messageQueue[1] and messageQueue[1] ~= '' then
+			SendAddonMessage('AstralKeys', strformat('%s %s', SYNC_VERSION, messageQueue[1]), 'GUILD')
+			table.remove(messageQueue, 1)
 		end
 	end
 
-	local tickerIterations = math.ceil(#messageQueue/5)
+	local tickerIterations = #messageQueue
 	ticker = C_Timer.NewTicker(SEND_INTERVAL[SEND_INTERVAL_SETTING], SendEntries, tickerIterations)
 end
 

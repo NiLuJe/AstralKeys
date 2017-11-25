@@ -1055,8 +1055,6 @@ function e.UpdateLines()
 	end
 end
 
-
-
 function e.UpdateFrames()
 	if not init or not AstralKeyFrame:IsShown() then return end
 

@@ -2,7 +2,6 @@ local _, e = ...
 
 local unitList = {}
 local guildList = {}
-local playerID -- Store's player's for quicker access to self data
 
 -- Puts all guild member's into a table for checking if unit in same guild
 
@@ -34,18 +33,6 @@ end
 function e.UnitID(unit)
 	return unitList[unit] or false
 end
-
--- Set player's unitID
-function e.SetPlayerUnitID()
-	playerID = e.UnitID(string.format('%s-%s', e.PlayerName(), e.PlayerRealm()))
-end
-
--- Retrieves player's id number
--- @return int ID number for player in character table
-function e.PlayerID()
-	return playerID
-end
-
 
 -- Clears unit list
 function e.WipeUnitList()

@@ -1,6 +1,6 @@
 local _, e = ...
 local DEBUG = false
-local RESET_VERSION = 15500
+local RESET_VERSION = 15800
 -- Reset time 15:00 UTC AMERICAS
 -- 07:00 UTC EU
 
@@ -73,9 +73,9 @@ frame:SetScript('OnEvent', function(self, event, ...)
 		if not AstralKeysSettings['reset'] or not AstralKeysSettings['resetVersion'] or AstralKeysSettings['resetVersion'] ~= RESET_VERSION then
 			wipe(AstralKeys)
 			wipe(AstralCharacters)
-			AstralAffixes[1] = 0
-			AstralAffixes[2] = 0
-			AstralAffixes[3] = 0
+			--AstralAffixes[1] = 0
+			--AstralAffixes[2] = 0
+			--AstralAffixes[3] = 0
 			AstralKeysSettings = {
 				['resetVersion'] = RESET_VERSION,
 				['reset'] = true,
