@@ -60,6 +60,7 @@ if not AstralKeysSettings then
 			},
 		['options'] = {
 			['announceKey'] = true,
+			['showMiniMapButton'] = true,
 			},
 		}
 end
@@ -91,6 +92,7 @@ frame:SetScript('OnEvent', function(self, event, ...)
 					},
 				['options'] = {
 					['announceKey'] = true,
+					['showMiniMapButton'] = true,
 					},
 				}
 		end
@@ -143,6 +145,14 @@ end
 
 function e.AnnounceKey()
 	return AstralKeysSettings.options.announceKey
+end
+
+function e.ShowMinimapButton()
+	return AstralKeysSettings.options.showMiniMapButton
+end
+
+function e.SetShowMinimapButton(bool)
+	AstralKeysSettings.options.showMiniMapButton = bool
 end
 
 function e.debug(addon, text, ...)

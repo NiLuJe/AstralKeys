@@ -515,7 +515,7 @@ end)
 closeButton:SetPoint('TOPRIGHT', AstralKeyFrame, 'TOPRIGHT', -10, -10)
 
 local quickOptionsFrame = CreateFrame('FRAME', 'quickOptionsFrame', AstralKeyFrame)
-quickOptionsFrame:SetSize(160, 45)
+quickOptionsFrame:SetSize(170, 45)
 quickOptionsFrame:SetBackdrop(BACKDROP)
 quickOptionsFrame:SetBackdropColor(0, 0, 0, 1)
 quickOptionsFrame:SetFrameLevel(10)
@@ -532,6 +532,17 @@ showOffline:SetScript('OnClick', function (self)
 	e.UpdateFrames()
 end)
 
+local showMinimapButton = e.CreateCheckBox(quickOptionsFrame, 'Show Minimap Button', 'LEFT')
+showMinimapButton:SetPoint('TOPRIGHT', showOffline, 'BOTTOMRIGHT', 0, -5)
+showMinimapButton:SetScript('OnClick', function(self)
+	e.SetShowMinimapButton(self:GetChecked())
+	if e.ShowMinimapButton() then
+		e.icon:Show('AstralKeys')
+	else
+		e.icon:Hide('AstralKeys')
+	end
+end)
+--[[
 local minKeyLevel = e.CreateEditBox(quickOptionsFrame, 'minKeyLevel', 25, 'Min announce level', 1, 100, 'LEFT')
 minKeyLevel:SetPoint('TOPRIGHT', showOffline, 'BOTTOMRIGHT', 0, -5)
 minKeyLevel:SetScript('OnEditFocusLost', function(self)
@@ -546,7 +557,7 @@ minKeyLevel:SetScript('OnMouseWheel', function(self, delta)
 		e.SetMinKeyLevel(self:GetNumber())
 	end
 	end)
-
+]]
 local quickOptions = CreateFrame('BUTTON', nil, AstralKeyFrame)
 quickOptions:SetSize(16, 16)
 quickOptions:SetPoint('TOPRIGHT', toggleButton, 'TOPLEFT', -5, 0)
@@ -926,7 +937,8 @@ local function InitializeFrame()
 	AstralAffixThree:UpdateInfo()
 
 	showOffline:SetChecked(e.GetShowOffline())
-	minKeyLevel:SetValue(e.GetMinKeyLevel())
+	--minKeyLevel:SetValue(e.GetMinKeyLevel())
+	showMinimapButton:SetChecked(e.ShowMinimapButton())
 
 	characterTable = e.DeepCopy(AstralCharacters)
 
