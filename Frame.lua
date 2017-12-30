@@ -50,7 +50,7 @@ local numShown = 0
 local characters = {}
 local characterTable = {}
 
-local function MixIn(D, T)	
+local function MixIn(D, T)
 	for k,v in pairs(T) do
 		if (type(v) == "function") and (force or (D[k] == nil)) then
 			D[k] = v;
@@ -87,7 +87,6 @@ local function CreateButton(parent, btnID, width, height, text, fontobject, high
 end
 
 local function CreateCharacterFrame(parent, frameName, unitName, bestKey, createDivider)
-
 	local frame = CreateFrame('FRAME', frameName, parent)
 	frame:SetSize(210, 31)
 	frame:SetFrameLevel(5)
@@ -113,12 +112,10 @@ local function CreateCharacterFrame(parent, frameName, unitName, bestKey, create
 	frame.keystone:SetPoint('BOTTOMLEFT', frame, 'BOTTOMLEFT', 10, 0)
 
 	if createDivider then
-
 		frame.divider = frame:CreateTexture('BACKGROUND')
 		frame.divider:SetSize(125, 1)
 		frame.divider:SetPoint('BOTTOMLEFT', frame, 'BOTTOMLEFT', 25)
 		frame.divider:SetColorTexture(.3, .3, .3)
-
 	end
 
 	function frame:UpdateBestDungeon(characterID)
@@ -130,7 +127,7 @@ local function CreateCharacterFrame(parent, frameName, unitName, bestKey, create
 	end
 
 	function frame:UpdateInformation(characterID)
-		if characterID then 
+		if characterID then
 			self.cid = characterID
 			self.unit = e.CharacterName(characterID)
 			self.realm = e.CharacterRealm(characterID)
@@ -158,9 +155,8 @@ local function CreateCharacterFrame(parent, frameName, unitName, bestKey, create
 	end
 
 	frame:SetScript('OnEnter', function(self)
-
 		if self.weeklyAP > 0 then
-			astralMouseOver:SetText(e.GetMapName(self.bestMap) .. '\n- ' .. e.ConvertToSI(self.weeklyAP * e.GetAKBonus()) .. ' AP in cache')
+			astralMouseOver:SetText(e.GetMapName(self.bestMap) .. '\n- ' .. e.ConvertToSI(self.weeklyAP * e.GetNextAKBonus()) .. ' AP in cache')
 		else
 			astralMouseOver:SetText('No mythic+ ran this week.')
 		end
@@ -170,15 +166,14 @@ local function CreateCharacterFrame(parent, frameName, unitName, bestKey, create
 		astralMouseOver:SetPoint('TOPLEFT', frame, 'BOTTOMRIGHT', - 105, 20)
 		astralMouseOver:Show()
 		AstralCharacterContent.slider:SetAlpha(1)
-		end)
+	end)
 
 	frame:SetScript('OnLeave', function()
 		astralMouseOver:Hide()
 		AstralCharacterContent.slider:SetAlpha(.2)
-		end)
+	end)
 
 	return frame
-
 end
 
 local unit_frames = {}
@@ -277,7 +272,7 @@ function UnitFrame:SetUnit(unit, class, mapID, keyLevel, cache, faction, btag)
 	end
 	if e.FrameListShown() == 'friend' then
 		self.unitID = e.FriendID(unit)
-		self.nameString:SetWidth(165)		
+		self.nameString:SetWidth(165)
 		if btag then
 			if tonumber(faction) == e.FACTION then
 				self.nameString:SetText( string.format('%s (%s)', WrapTextInColorCode(btag:sub(1, btag:find('#') - 1), 'ff82c5ff'), WrapTextInColorCode(unit:sub(1, unit:find('-') - 1), select(4, GetClassColor(class)))))
@@ -378,7 +373,7 @@ end
 
 local function InviteUnit(self)
 	if not self.isConnected then return end
-	
+
 	if e.FrameListShown() == 'guild' then
 		if self.inviteType == 'INVITE' then
 			InviteToGroup(e.Unit(AstralMenuFrame.unit))
@@ -396,7 +391,7 @@ local function InviteUnit(self)
 				BNRequestInviteFriend(e.GetFriendGaID(AstralFriends[AstralMenuFrame.unit][2]))
 			elseif self.inviteType == 'SUGGEST_INVITE' then
 				BNInviteFriend(e.GetFriendGaID(AstralFriends[AstralMenuFrame.unit][2]))
-			end			
+			end
 		else
 			if self.inviteType == 'INVITE' then
 				BNInviteFriend(e.FriendGUID(e.Friend(AstralMenuFrame.unit)))
@@ -404,7 +399,7 @@ local function InviteUnit(self)
 				BNRequestInviteFriend(e.FriendGUID(e.Friend(AstralMenuFrame.unit)))
 			elseif self.inviteType == 'SUGGEST_INVITE' then
 				BNInviteFriend(e.FriendGUID(e.Friend(AstralMenuFrame.unit)))
-			end			
+			end
 		end
 	end
 	-- GetDisplayedInviteType(guid)
@@ -437,7 +432,7 @@ local guildInfo = CreateFrame('FRAME', nil, AstralKeyFrame)
 guildInfo:SetSize(125, 13)
 guildInfo:SetPoint('BOTTOMRIGHT', AstralKeyFrame, 'BOTTOMRIGHT', -5, 5)
 guildInfo:EnableMouse(true)
-guildInfo:SetScript('OnMouseDown', function(self) 
+guildInfo:SetScript('OnMouseDown', function(self)
 	if not astralGuildInfo then
 		local astralGuildInfo = CreateFrame('FRAME', 'astralGuildInfo', UIParent)
 		astralGuildInfo:SetFrameLevel(8)
@@ -468,16 +463,16 @@ guildInfo:SetScript('OnMouseDown', function(self)
 		astralGuildInfo.editBox:SetScript('OnChar', function(self, char)
 			self:SetText('www.astralguild.com')
 			self:HighlightText()
+		end)
 
 		astralGuildInfo.editBox:SetScript("OnEscapePressed", function(self)
 			astralGuildInfo:Hide()
 		end)
 
-			end)
 		astralGuildInfo.editBox:SetScript('OnEditFocusLost', function(self)
 			self:SetText('www.astralguild.com')
 			self:HighlightText()
-			end)
+		end)
 
 		astralGuildInfo.button = CreateButton(astralGuildInfo, nil, 40, 20, 'OK', FONT_OBJECT_CENTRE, FONT_OBJECT_HIGHLIGHT)
 		astralGuildInfo.button:SetBackdrop(BACKDROPBUTTON)
@@ -486,11 +481,12 @@ guildInfo:SetScript('OnMouseDown', function(self)
 		astralGuildInfo.button.t:ClearAllPoints()
 		astralGuildInfo.button.t = nil
 		astralGuildInfo.button:SetScript('OnClick', function(self)
-			astralGuildInfo:Hide() end)
+			astralGuildInfo:Hide()
+		end)
 	else
 		astralGuildInfo:Show()
 	end
- end)
+end)
 
 guildInfo.string = guildInfo:CreateFontString('ARTWORK')
 guildInfo.string:SetFont(FONT_CONTENT, FONT_SIZE - 2)
@@ -510,7 +506,7 @@ logo:SetTexture('Interface\\AddOns\\AstralKeys\\Media\\Astral.tga')
 logo:SetPoint('TOPLEFT', AstralKeyFrame, 'TOPLEFT', 10, -10)
 
 local title = e.CreateHeader(AstralKeyFrame, 'title', 220, 20, 'Astral Keys', 26)
-title:SetPoint('LEFT', logo, 'RIGHT', 10, 7) 
+title:SetPoint('LEFT', logo, 'RIGHT', 10, 7)
 
 -----------------------------------
 ---- Guild/Friend List buttons
@@ -548,10 +544,10 @@ toggleButton:SetPoint('TOPRIGHT', closeButton, 'TOPLEFT', - 5, 0)
 toggleButton:SetNormalTexture('Interface\\AddOns\\AstralKeys\\Media\\minimize.tga')
 toggleButton:SetScript('OnEnter', function(self)
 	self:GetNormalTexture():SetVertexColor(126/255, 126/255, 126/255)
-	end)
+end)
 toggleButton:SetScript('OnLeave', function(self)
 	self:GetNormalTexture():SetVertexColor(1, 1, 1)
-	end)
+end)
 
 toggleButton:SetScript('OnClick', function(self)
 	local left, bottom, width = AstralKeyFrame:GetRect()
@@ -578,7 +574,7 @@ toggleButton:SetScript('OnClick', function(self)
 		AstralContentFrame:ClearAllPoints()
 		AstralContentFrame:SetPoint('TOPLEFT', AstralKeyFrame, 'TOPLEFT', 255, -95)
 	end
-	end)
+end)
 
 local optionsButton = CreateFrame('BUTTON', nil, AstralKeyFrame)
 optionsButton:SetSize(16, 16)
@@ -586,14 +582,14 @@ optionsButton:SetPoint('TOPRIGHT', toggleButton, 'TOPLEFT', -5, 0)
 optionsButton:SetNormalTexture('Interface\\AddOns\\AstralKeys\\Media\\menu3.tga')
 optionsButton:SetScript('OnEnter', function(self)
 	self:GetNormalTexture():SetVertexColor(126/255, 126/255, 126/255)
-	end)
+end)
 optionsButton:SetScript('OnLeave', function(self)
 	self:GetNormalTexture():SetVertexColor(1, 1, 1)
-	end)
+end)
 
 optionsButton:SetScript('OnClick', function()
 	AstralOptionsFrame:SetShown( not AstralOptionsFrame:IsShown())
-	end)
+end)
 
 
 -- Announce Buttons
@@ -618,7 +614,7 @@ end
 
 announceFrame.announce:SetScript('OnClick', function(self)
 	e.ToggleAnnounce()
-	end)
+end)
 
 announceFrame.string = announceFrame:CreateFontString('ARTWORK')
 announceFrame.string:SetFont(FONT_CONTENT, FONT_SIZE)
@@ -635,7 +631,7 @@ partyAnnounce:SetPoint('LEFT', announceFrame.announce, 'RIGHT', 5, 0)
 
 partyAnnounce:SetScript('OnClick', function()
 	e.AnnounceCharacterKeys('PARTY')
-	end)
+end)
 
 local guildAnnounce = CreateFrame('BUTTON', nil, announceFrame)
 guildAnnounce:SetSize(15, 15)
@@ -648,7 +644,7 @@ guildAnnounce:SetPoint('LEFT', partyAnnounce, 'RIGHT')
 
 guildAnnounce:SetScript('OnClick', function()
 	e.AnnounceCharacterKeys('GUILD')
-	end)
+end)
 
 
 -- Tooltip AstralKeyFrame
@@ -704,11 +700,11 @@ affixFrame:SetScript('OnEnter', function(self)
 	mouseOverFrame:SetText('Next week\'s affixes\n -' .. C_ChallengeMode.GetAffixInfo(e.AffixOne(1)) .. '\n -' .. C_ChallengeMode.GetAffixInfo(e.AffixTwo(1)) .. '\n -' .. C_ChallengeMode.GetAffixInfo(e.AffixThree(1)))
 	mouseOverFrame:AdjustSize()
 	mouseOverFrame:Show()
-	end)
+end)
 
 affixFrame:SetScript('OnLeave', function(self)
 	mouseOverFrame:Hide()
-	end)
+end)
 
 local affixHeader = e.CreateHeader(affixFrame, 'affixHeader', 175, 20, 'Affixes', 12)
 affixHeader:SetPoint('TOPLEFT', affixFrame, 'TOPLEFT')
@@ -740,12 +736,11 @@ affixOne:SetScript('OnEnter', function(self)
 	astralMouseOver:AdjustSize(150)
 	astralMouseOver:SetPoint('TOPLEFT', self, 'BOTTOMRIGHT', -15, 10)
 	astralMouseOver:Show()
-
-	end)
+end)
 
 affixOne:SetScript('OnLeave', function()
 	astralMouseOver:Hide()
-	end)
+end)
 
 local affixTwo = CreateFrame('FRAME', 'AstralAffixTwo', affixFrame)
 --affixTwo.aid = e.GetAffix(2)
@@ -774,12 +769,11 @@ affixTwo:SetScript('OnEnter', function(self)
 	astralMouseOver:AdjustSize(150)
 	astralMouseOver:SetPoint('TOPLEFT', self, 'BOTTOMRIGHT', -15, 10)
 	astralMouseOver:Show()
-
-	end)
+end)
 
 affixTwo:SetScript('OnLeave', function()
 	astralMouseOver:Hide()
-	end)
+end)
 
 local affixThree = CreateFrame('FRAME', 'AstralAffixThree', affixFrame)
 --affixThree.aid = e.GetAffix(3)
@@ -801,19 +795,18 @@ function affixThree:UpdateInfo()
 	self.texture:SetTexture(select(3, C_ChallengeMode.GetAffixInfo(self.aid)))
 end
 
-affixThree:SetScript('OnEnter', function(self) 
+affixThree:SetScript('OnEnter', function(self)
 	if tonumber(self.aid) == 0 or not self.aid then return end
 
 	astralMouseOver:SetText(select(2, C_ChallengeMode.GetAffixInfo(self.aid)))
 	astralMouseOver:AdjustSize(150)
 	astralMouseOver:SetPoint('TOPLEFT', self, 'BOTTOMRIGHT', -15, 10)
 	astralMouseOver:Show()
-
-	end)
+end)
 
 affixThree:SetScript('OnLeave', function()
 	astralMouseOver:Hide()
-	end)
+end)
 
 -- Character Frames
 ----------------------------------------------------------------
@@ -833,11 +826,11 @@ characterContent.slider:SetAlpha(.2)
 
 characterContent:SetScript('OnEnter', function()
 	AstralCharacterContent.slider:SetAlpha(1)
-	end)
+end)
 
 characterContent:SetScript('OnLeave', function()
 	AstralCharacterContent.slider:SetAlpha(.2)
-	end)
+end)
 
 -- Key Frames
 ----------------------------------------------------------------
@@ -864,24 +857,23 @@ contentFrame:SetScript('OnMouseWheel', function(self, delta)
 	if sortedTable.numShown < 26 then return end
 
 	offset = offset - (delta * math.ceil(sortedTable.numShown/25))
-	
+
 	offset = math.max(0, offset)
 	offset = math.min(offset, sortedTable.numShown - 25)
-	
+
 	e.UpdateLines()
 
 	contentFrame.slider:ClearAllPoints()
 	contentFrame.slider:SetPoint('TOPLEFT', contentFrame, 'TOPRIGHT', 0, -offset/(sortedTable.numShown - 25) * 365)
-
-	end)
+end)
 
 contentFrame:SetScript('OnEnter', function()
 	contentFrame.slider:SetAlpha(1)
-	end)
+end)
 
 contentFrame:SetScript('OnLeave', function()
 	contentFrame.slider:SetAlpha(0.2)
-	end)
+end)
 
 local keyButton = CreateButton(contentFrame, 'keyButton', 45, 20, 'Level', FONT_OBJECT_CENTRE, FONT_OBJECT_HIGHLIGHT) --75
 keyButton:SetPoint('BOTTOMLEFT', contentFrame, 'TOPLEFT')
@@ -899,8 +891,7 @@ keyButton:SetScript('OnClick', function()
 	AstralKeysSettings.frameOptions.sortMethod = 4
 	e.SortTable(sortedTable[e.FrameListShown()], AstralKeysSettings.frameOptions.sortMethod)
 	e.UpdateLines()
-
-	end)
+end)
 
 local mapButton = CreateButton(contentFrame, 'mapButton', 170, 20, 'Dungeon', FONT_OBJECT_CENTRE, FONT_OBJECT_HIGHLIGHT)
 mapButton:SetPoint('LEFT', keyButton, 'RIGHT')
@@ -917,8 +908,7 @@ mapButton:SetScript('OnClick', function()
 	AstralKeysSettings.frameOptions.sortMethod = 3
 	e.SortTable(sortedTable[e.FrameListShown()], AstralKeysSettings.frameOptions.sortMethod)
 	e.UpdateLines()
-
-	end)
+end)
 
 local nameButton = CreateButton(contentFrame, 'nameButton', 130, 20, 'Player', FONT_OBJECT_CENTRE, FONT_OBJECT_HIGHLIGHT)
 nameButton:SetPoint('LEFT', mapButton, 'RIGHT')
@@ -935,8 +925,7 @@ nameButton:SetScript('OnClick', function()
 	AstralKeysSettings.frameOptions.sortMethod = 1
 	e.SortTable(sortedTable[e.FrameListShown()], AstralKeysSettings.frameOptions.sortMethod)
 	e.UpdateLines()
-
-	end)
+end)
 
 local completeButton = CreateButton(contentFrame, 'completeButton', 30, 20, e.CACHE_LEVEL .. '+', FONT_OBJECT_CENTRE, FONT_OBJECT_HIGHLIGHT)
 completeButton:SetPoint('LEFT', nameButton, 'RIGHT')
@@ -953,8 +942,7 @@ completeButton:SetScript('OnClick', function()
 	AstralKeysSettings.frameOptions.sortMethod = 5
 	e.SortTable(sortedTable[e.FrameListShown()], AstralKeysSettings.frameOptions.sortMethod)
 	e.UpdateLines()
-
-	end)
+end)
 
 function AstralKeyFrame:OnUpdate(elapsed)
 	self.updateDelay = self.updateDelay + elapsed
@@ -975,7 +963,7 @@ guildButton:SetScript('OnClick', function()
 		AstralContentFrame:ResetSlider()
 		friendButton:SetNormalTexture(nil)
 		friendButton:SetText(WrapTextInColorCode('Friend list', 'ff9d9d9d'))
-		
+
 		guildButton:SetNormalTexture(guildButton:GetHighlightTexture())
 		guildButton:SetText('Guild list')
 		e.SetFrameListShown('guild')
@@ -983,7 +971,7 @@ guildButton:SetScript('OnClick', function()
 		completeButton:Show()
 		nameButton:SetW(130)
 	end
-	end)
+end)
 
 friendButton:SetScript('OnClick', function()
 	if AstralMenuFrame:IsShown() then
@@ -996,14 +984,14 @@ friendButton:SetScript('OnClick', function()
 		guildButton:SetText(WrapTextInColorCode('Guild list', 'ff9d9d9d'))
 		guildButton:SetNormalTexture(nil)
 
-		friendButton:SetNormalTexture(friendButton:GetHighlightTexture())		
+		friendButton:SetNormalTexture(friendButton:GetHighlightTexture())
 		friendButton:SetText('Friend list')
 		e.UpdateFrames()
 
 		completeButton:Hide()
 		nameButton:SetW(180)
 	end
-	end)
+end)
 
 function AstralKeyFrame:ToggleLists()
 	if AstralKeysSettings.options.friendSync then
@@ -1013,9 +1001,9 @@ function AstralKeyFrame:ToggleLists()
 		guildButton:Hide()
 		friendButton:Hide()
 		if e.FrameListShown() == 'friend' then
-			friendButton:SetNormalTexture(nil)	
+			friendButton:SetNormalTexture(nil)
 			friendButton:SetText(WrapTextInColorCode('Friend list', 'ff9d9d9d'))
-			
+
 			guildButton:SetNormalTexture(guildButton:GetHighlightTexture())
 			guildButton:SetText('Guild list')
 			e.SetFrameListShown('guild')
@@ -1031,20 +1019,20 @@ AstralKeyFrame:SetScript('OnKeyDown', function(self, key)
 		self:SetPropagateKeyboardInput(false)
 		AstralKeyFrame:Hide()
 	end
-	end)
+end)
 
 AstralKeyFrame:SetScript('OnShow', function(self)
 	e.UpdateFrames()
 	self:SetPropagateKeyboardInput(true)
-	end)
+end)
 
 AstralKeyFrame:SetScript('OnDragStart', function(self)
 	self:StartMoving()
-	end)
+end)
 
 AstralKeyFrame:SetScript('OnDragStop', function(self)
 	self:StopMovingOrSizing()
-	end)
+end)
 
 for i = 1, 25 do
 	unit_frames[i] = UnitFrame:NewFrame(AstralContentFrame)
@@ -1096,7 +1084,7 @@ local function InitializeFrame()
 
 	local id = e.GetCharacterID(e.Player())
 
-	-- Only create 9 character frames in total, first is reserved for current logged in character if 
+	-- Only create 9 character frames in total, first is reserved for current logged in character if
 	if id then -- We are logged into a character that has a key
 		characters[1] = CreateCharacterFrame(characterFrame, nil, characterTable[id].unit, nil, false)
 		characters[1]:SetPoint('TOPLEFT', characterHeader, 'BOTTOMLEFT', 0, -5)
@@ -1136,7 +1124,6 @@ local function InitializeFrame()
 				characterOffset = characterOffset - delta
 				e.UpdateCharacterFrames()
 			end
-			
 		else
 			if characterOffset > 0 then -- Scroll up
 				characterOffset = characterOffset - delta
@@ -1146,12 +1133,10 @@ local function InitializeFrame()
 
 		characterContent.slider:ClearAllPoints()
 		characterContent.slider:SetPoint('TOPLEFT', characterContent, 'TOPRIGHT', 0, characterContent:GetHeight() * -characterOffset/(#characterTable - #characters))
-
-		end)
+	end)
 
 	e.UpdateFrames()
 	e.UpdateCharacterFrames()
-
 end
 
 function e.UpdateAffixes()
@@ -1223,7 +1208,7 @@ function e.UpdateCharacterFrames()
 				characters[i]:UpdateInformation(e.GetCharacterID(characterTable[i + characterOffset - 1].unit))
 			else
 				characters[i]:UpdateInformation('')
-			end	
+			end
 		end
 	else
 		for i = 1, #characters do

@@ -66,11 +66,11 @@ AstralOptionsFrame:Hide()
 
 AstralOptionsFrame:SetScript('OnDragStart', function(self)
 	self:StartMoving()
-	end)
+end)
 
 AstralOptionsFrame:SetScript('OnDragStop', function(self)
 	self:StopMovingOrSizing()
-	end)
+end)
 
 local logo = AstralOptionsFrame:CreateTexture('ARTWORK')
 logo:SetSize(64, 64)
@@ -92,7 +92,7 @@ closeButton:SetScript('OnClick', function()
 end)
 
 -- Content frame to anchor all option panels
--- 
+--
 local contentFrame = CreateFrame('FRAME', 'AstralFrame_OptionContent', AstralOptionsFrame)
 contentFrame:SetPoint('TOPLEFT', logo, 'BOTTOMLEFT', 5, -10)
 contentFrame:SetSize(630, 350)
@@ -106,7 +106,7 @@ showOffLine:SetScript('OnClick', function(self)
 	AstralKeysSettings.options.showOffline = self:GetChecked()
 	AstralContentFrame:ResetSlider()
 	e.UpdateFrames()
-	end)
+end)
 
 local showMinimap = e.CreateCheckBox(contentFrame, 'Show Minimap button')
 showMinimap:SetPoint('LEFT', showOffLine, 'RIGHT', 10, 0)
@@ -120,13 +120,13 @@ showMinimap:SetScript('OnClick', function(self)
 	if IsAddOnLoaded('ElvUI_Enhanced') then
 		ElvUI[1]:GetModule('MinimapButtons'):UpdateLayout()
 	end
-	end)
+end)
 
 local announceKeys = e.CreateCheckBox(contentFrame, 'Announce new keys to party')
 announceKeys:SetPoint('LEFT', showMinimap, 'RIGHT', 10, 0)
 announceKeys:SetScript('OnClick', function(self)
 	e.ToggleAnnounce()
-	end)
+end)
 
 contentFrame.syncHeader = e.CreateHeader(contentFrame, 'sync_header', 200, 20, 'Syncing Options', 10)
 contentFrame.syncHeader:SetPoint('TOPLEFT', showOffLine, 'BOTTOMLEFT', 0, -10)
@@ -137,20 +137,20 @@ syncFriends:SetScript('OnClick', function(self)
 	AstralKeysSettings.options.friendSync= self:GetChecked()
 	AstralKeyFrame:ToggleLists()
 	e.ToggleFriendSync()
-	end)
+end)
 
 local minFriendSync = e.CreateEditBox(contentFrame, 25, 'Minimum key level to send to friends', 2, 99, 'LEFT')
 minFriendSync:SetPoint('LEFT', syncFriends, 'RIGHT', 245, 0)
 minFriendSync:HookScript('OnEditFocusLost', function(self)
 	AstralKeysSettings.options.minFriendSync = self:GetNumber()
-	end)
+end)
 
 local otherFaction = e.CreateCheckBox(contentFrame, 'Show other faction')
 otherFaction:SetPoint('TOPLEFT', syncFriends, 'BOTTOMLEFT', 0, -5)
 otherFaction:SetScript('OnClick', function(self)
 	AstralKeysSettings.options.showOtherFaction = self:GetChecked()
 	e.UpdateFrames()
-	end)
+end)
 
 local filter_header = e.CreateHeader(contentFrame, 'filter_header', 200, 20, 'Rank filter for Guild list', 10)
 filter_header:SetPoint('TOPLEFT', otherFaction, 'BOTTOMLEFT', 0, -10)
@@ -200,7 +200,7 @@ function InitData()
 			if AstralKeysSettings.frameOptions.list == 'guild' then
 				e.UpdateFrames()
 			end
-			end)
+		end)
 	end
 end
 AstralEvents:Register('PLAYER_LOGIN', InitData, 'initOptions')
@@ -210,8 +210,8 @@ AstralOptionsFrame:SetScript('OnKeyDown', function(self, key)
 		self:SetPropagateKeyboardInput(false)
 		AstralOptionsFrame:Hide()
 	end
-	end)
+end)
 
 AstralOptionsFrame:SetScript('OnShow', function(self)
 	self:SetPropagateKeyboardInput(true)
-	end)
+end)

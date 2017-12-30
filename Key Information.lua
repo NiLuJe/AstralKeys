@@ -133,7 +133,7 @@ end
 
 -- Parses item link to get mapID, key level, affix1, affix2, affix3
 -- @param link Item Link for keystone
--- return int ID's for mapID, keyLevel, affix1, affix2, affix3 
+-- return int ID's for mapID, keyLevel, affix1, affix2, affix3
 -- return ex. 239 12 4 5 10
 function e.ParseLink(link)
 	if not link:find('keystone') then return end -- Not a keystone link, don't do anything, also something went wrong shouldn't be here if not keystone link
@@ -168,7 +168,7 @@ end
 
 -- Deprecated
 --[[
-if not AstralAffixes then 
+if not AstralAffixes then
 	AstralAffixes = {}
 	AstralAffixes[1] = 0
 	AstralAffixes[2] = 0

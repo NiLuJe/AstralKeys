@@ -27,7 +27,7 @@ function e.DataResetTime()
 		hours = 7 + (d.isdst and 1 or 0) + hourOffset
 		if d.wday > 3 then
 			if d.wday == 4 then
-				days = (d.hour < hours and 0 or 7)				
+				days = (d.hour < hours and 0 or 7)
 			else
 				days = 11 - d.wday
 			end
@@ -122,7 +122,7 @@ frame:SetScript('OnEvent', function(self, event, ...)
 		end
 		end
 		frame:UnregisterEvent('ADDON_LOADED')
-	end)
+end)
 
 function e.FrameListShown()
 	return AstralKeysSettings.frameOptions.list

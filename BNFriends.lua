@@ -53,13 +53,13 @@ function e.BNFriendUpdate(index)
 		end
 	end
 
-	if not BNFriendList[battleTag] then		
+	if not BNFriendList[battleTag] then
 		BNFriendList[battleTag] = {toonName = toonName, client = client, gaID = gaID, usingAK = false}
 	else
 		BNFriendList[battleTag].client = client --Update client, did they log off WoW?
 		BNFriendList[battleTag].presID = presID or 0 -- If they have a presID force an update, else set to 0. Used for all API needing a pressence ID
 		BNFriendList[battleTag].gaID = gaID -- Might as well keep it up to date
-	end	
+	end
 
 end
 AstralEvents:Register('BN_FRIEND_INFO_CHANGED', e.BNFriendUpdate, 'update_BNFriend')
@@ -139,7 +139,7 @@ local function UpdateNonBNetFriendList()
 		local guid = select(20, BNGetGameAccountInfo(gaID))
 			BNFriendList[battleTag] = {toonName = toonName, client = client, gaID = gaID, usingAK = false}
 			if client == 'WoW' then
-				local fullName = toonName .. '-' .. select(4, BNGetGameAccountInfo(gaID))	
+				local fullName = toonName .. '-' .. select(4, BNGetGameAccountInfo(gaID))
 				if NonBNFriend_List[fullName] then
 					NonBNFriend_List[fullName].isBtag = true -- don't need to send people on WoW friend and bnet friend the same data.
 				end
@@ -183,7 +183,7 @@ local function RecieveKey(msg, sender)
 
 	e.AddUnitToTable(unit, class, faction, 'friend', dungeonID, keyLevel, nil, btag)
 
-	if e.FrameListShown() == 'friends' then 
+	if e.FrameListShown() == 'friends' then
 		e.UpdateFrames()
 	end
 end
@@ -192,8 +192,9 @@ AstralComs:RegisterPrefix('WHISPER', UPDATE_VERSION, RecieveKey)
 
 local function SyncFriendUpdate(entry, sender)
 	if not AstralKeysSettings.options.friendSync then return end
+	local bnetID = select(17, BNGetGameAccountInfo(sender))
 	local btag
-	if type(sender) == 'number' then	
+	if type(sender) == 'number' then
 		local bnetID = select(17, BNGetGameAccountInfo(sender))
 		btag = select(3, BNGetFriendInfo(BNGetFriendIndex(bnetID)))
 	end
@@ -218,7 +219,7 @@ local function SyncFriendUpdate(entry, sender)
 		week = tonumber(week)
 		timeStamp = tonumber(timeStamp)
 
-		if week >= e.Week then 
+		if week >= e.Week then
 
 			local id = e.FriendID(unit)
 			if id then
@@ -236,8 +237,8 @@ local function SyncFriendUpdate(entry, sender)
 			e.AddUnitToTable(unit, class, faction, 'friend', dungeonID, keyLevel, nil, btag)
 		end
 	end
-	if e.FrameListShown() == 'friends' then 
-		e.UpdateFrames() 
+	if e.FrameListShown() == 'friends' then
+		e.UpdateFrames()
 	end
 end
 AstralComs:RegisterPrefix('BNET', SYNC_VERSION, SyncFriendUpdate)
@@ -332,7 +333,7 @@ local function PingFriendsForAstralKeys()
 		local guid = select(20, BNGetGameAccountInfo(gaID))
 			BNFriendList[battleTag] = {toonName = toonName, client = client, gaID = gaID, usingAK = false}
 			if client == 'WoW' then
-				local fullName = toonName .. '-' .. select(4, BNGetGameAccountInfo(gaID))	
+				local fullName = toonName .. '-' .. select(4, BNGetGameAccountInfo(gaID))
 				if NonBNFriend_List[fullName] then
 					NonBNFriend_List[fullName].isBtag = true -- don't need to send people on WoW friend and bnet friend the same data.
 				end
@@ -343,7 +344,7 @@ local function PingFriendsForAstralKeys()
 				end
 			end
 		end
-	end	
+	end
 
 	for _, player in pairs(BNFriendList) do
 		if player.client == 'WoW' then
@@ -439,7 +440,7 @@ e.AddListFilter('friend', FriendFilter)
 local function FriendSort(A, v)
 	if v == 5 then v = 1 end
 	if v == 3 then
-		table.sort(A, function(a, b) 
+		table.sort(A, function(a, b)
 			if AstralKeysSettings.frameOptions.orientation == 0 then
 				return e.GetMapName(a[v]) > e.GetMapName(b[v])
 			else
@@ -458,7 +459,7 @@ local function FriendSort(A, v)
 				end
 			end)
 		else
-			table.sort(A, function(a, b) 
+			table.sort(A, function(a, b)
 				if AstralKeysSettings.frameOptions.orientation == 0 then
 					return a[v] > b[v]
 				else

@@ -47,7 +47,7 @@ end
 -- @return int mapID for the highest ran mythic+ for the week
 -- @return int 0 implies no key run for the week
 function e.GetCharacterBestMap(id)
-	return AstralCharacters[id].map 
+	return AstralCharacters[id].map
 end
 
 -- Retrieves faction for character
@@ -100,8 +100,8 @@ function e.GetCharacterKey(unit)
 	if not unit then return '' end
 
 	local id = e.UnitID(unit)
-	
-	if id then 
+
+	if id then
 		return AstralKeys[id][4] .. ' ' .. C_ChallengeMode.GetMapInfo(AstralKeys[id][3]) -- 4:: key level 3:: mapID
 	else
 		return WrapTextInColorCode('No key found.', 'ff9d9d9d')

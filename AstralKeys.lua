@@ -4,7 +4,7 @@ if not AstralKeys then AstralKeys = {} end
 if not AstralCharacters then AstralCharacters = {} end
 if not AstralFriends then AstralFriends = {} end
 
-local initializeTime = {} 
+local initializeTime = {}
 initializeTime[1]= 1500390000 -- US Tuesday at reset
 initializeTime[2]= 1500447600 -- EU Wednesday at reset
 
@@ -30,13 +30,13 @@ function e.ConvertToSI(quantity)
 
 	while amount > 1000 do
 		power = power + 1
-		amount = amount /1000
+		amount = amount / 1000
 	end
 
 	if amount < 10 then
-		return string.format('%.2f', amount) .. ' ' .. IMP[power]
+		return string.format('%.2f', amount) .. ' ' .. SI[power]
 	else
-		return math.floor(amount) .. ' ' .. IMP[power]
+		return string.format('%.1f', amount) .. ' ' .. SI[power]
 	end
 end
 
@@ -58,7 +58,7 @@ AstralEvents:Register('PLAYER_LOGIN', function()
 	else
 		e.FACTION = 1
 	end
-	
+
 	local region = GetCurrentRegion()
 	local currentTime = GetServerTime()
 	local d = date('*t', currentTime)
@@ -114,7 +114,7 @@ AstralEvents:Register('PLAYER_LOGIN', function()
 				end
 				self.elapsed = 0
 			end
-			end)
+		end)
 	elseif d.wday == 4 and d.hour < (7 + hourOffset + (d.isdst and 1 or 0)) and region == 3 then
 		local frame = CreateFrame('FRAME')
 		frame.elapsed = 0
@@ -145,7 +145,7 @@ AstralEvents:Register('PLAYER_LOGIN', function()
 				end
 				self.elapsed = 0
 			end
-			end)
+		end)
 	end
 
 	for i = 1, #AstralKeys do -- index guild units
@@ -155,7 +155,7 @@ AstralEvents:Register('PLAYER_LOGIN', function()
 
 	for i = 1, #AstralCharacters do -- index player's characters
 		e.SetCharacterID(AstralCharacters[i].unit, i)
-	end	
+	end
 
 	for i = 1, #AstralFriends do
 		e.SetFriendID(AstralFriends[i][1], i)

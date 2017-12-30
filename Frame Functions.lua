@@ -104,10 +104,10 @@ function e.CreateEditBox(parent, width, label, minValue, maxValue, labelPos)
 	editBox:SetNumeric(true)
 	editBox:SetScript("OnEnterPressed", function(self)
 		self:ClearFocus()
-		end)
+	end)
 	editBox:SetScript("OnEscapePressed", function(self)
 		self:ClearFocus()
-		end)
+	end)
 
 	if label then
 		editBox.label = e.CreateLabel(editBox, label, labelPos)
@@ -119,11 +119,11 @@ function e.CreateEditBox(parent, width, label, minValue, maxValue, labelPos)
 
 	editBox:SetScript('OnDisable', function(self)
 		self.label:SetTextColor(122/255, 122/255, 122/255)
-		end)
+	end)
 
 	editBox:SetScript('OnEnable', function(self)
 		self.label:SetTextColor(1, 1, 1)
-		end)
+	end)
 
 
 	editBox:SetScript("OnEditFocusLost", function(self)
@@ -133,7 +133,7 @@ function e.CreateEditBox(parent, width, label, minValue, maxValue, labelPos)
 		if self:GetNumber() > self.maxValue then
 			self:SetNumber(self.maxValue)
 		end
-		end)
+	end)
 
 	return editBox
 
@@ -249,11 +249,11 @@ menuFrame:SetScript('OnKeyDown', function(self, key)
 	if key == 'ESCAPE' then
 		AstralMenuFrame:Hide()
 	end
-	end)
+end)
 
 menuFrame:SetScript('OnShow', function(self)
 	self:SetPropagateKeyboardInput(true)
-	end)
+end)
 
 menuFrame.title = menuFrame:CreateFontString('ARTWORK')
 menuFrame.title:SetFont(FONT_CONTENT, FONT_SIZE - 1)
@@ -308,5 +308,5 @@ function menuFrame:AddSelection(name, onClick, onShow)
 		dtbl[#dtbl]:HookScript('OnClick', HideMenu)
 	end
 
-	dtbl[#dtbl]:SetPoint('TOPLEFT', self, 'TOPLEFT', 5, -20*(#dtbl) -5)	
+	dtbl[#dtbl]:SetPoint('TOPLEFT', self, 'TOPLEFT', 5, -20*(#dtbl) -5)
 end

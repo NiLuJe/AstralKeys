@@ -40,7 +40,7 @@ function AstralComs:RegisterPrefix(channel, prefix, f)
 	if self:IsPrefixRegistered(channel, prefix) then return end -- Did we register something to the same channel with the same name?
 
 	if not self.dtbl[channel] then self.dtbl[channel] = {} end
-	
+
 	local obj = {}
 	obj.method = f
 	obj.prefix = prefix
@@ -190,7 +190,7 @@ local function UpdateUnitKey(msg)
 	local timeStamp = e.WeekTime() -- part of the week we got this key update, used to determine if a key got de-leveled or not
 
 	local unit, class, dungeonID, keyLevel, weekly, week = strsplit(':', msg)
-	
+
 	dungeonID = tonumber(dungeonID)
 	keyLevel = tonumber(keyLevel)
 	weekly = tonumber(weekly)
@@ -211,7 +211,7 @@ local function UpdateUnitKey(msg)
 
 	e.UpdateFrames()
 	e.AddUnitToTable(unit, class, faction, 'guild', dungeonID, keyLevel, weekly)
-	
+
 	-- Update character frames if we received our own key
 	if unit == e.Player() then
 		e.UpdateCharacterFrames()
@@ -228,10 +228,9 @@ local function SyncReceive(entry, sender)
 
 	local _pos = 0
 	while find(entry, '_', _pos) do
-		
 		class, dungeonID, keyLevel, weekly, week, timeStamp = entry:match(':(%a+):(%d+):(%d+):(%d+):(%d+):(%d)', entry:find(':', _pos))
 		unit = entry:sub(_pos, entry:find(':', _pos) - 1)
-		
+
 		_pos = find(entry, '_', _pos) + 1
 
 		dungeonID = tonumber(dungeonID)
@@ -240,8 +239,7 @@ local function SyncReceive(entry, sender)
 		week = tonumber(week)
 		timeStamp = tonumber(timeStamp)
 
-		if week >= e.Week and e.UnitInGuild(unit) then 
-
+		if week >= e.Week and e.UnitInGuild(unit) then
 			local id = e.UnitID(unit)
 			if id then
 				if AstralKeys[id][7] < timeStamp then
@@ -275,7 +273,6 @@ AstralComs:RegisterPrefix('GUILD', 'updateWeekly', UpdateWeekly)
 
 local function PushKeyList(msg, sender)
 	if sender == e.Player() then return end
-
 	wipe(messageStack)
 	for i = 1, #AstralKeys do
 		if e.UnitInGuild(AstralKeys[i][1]) then -- Only send current guild keys, who wants keys from a different guild?
@@ -283,7 +280,7 @@ local function PushKeyList(msg, sender)
 			messageStack[#messageStack + 1] = strformat('%s_', table.concat(AstralKeys[i], ':'))
 		end
 	end
- 
+
 	local msg = ''
 	while messageStack[1] do
 		msg = strformat('%s%s', msg, messageStack[1])
