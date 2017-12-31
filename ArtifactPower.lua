@@ -90,8 +90,8 @@ function e.BuildMapTable()
 			DUNGEON_TABLE[map].apTier[3] = 325	-- 7-9
 			DUNGEON_TABLE[map].apTier[4] = 465	-- 10-14
 			DUNGEON_TABLE[map].apTier[5] = 725	-- 15-19
-			DUNGEON_TABLE[map].apTier[6] = 1025	-- 20-25
-			DUNGEON_TABLE[map].apBonus   = 50	-- 10+
+			DUNGEON_TABLE[map].apTier[6] = 975	-- 20-25 (What you actually end up with is one T5 token (147719: Lesser Master's Symbol), plus one token equal to Bonus*5 (147814: Lesser Expert's Bounty))
+			DUNGEON_TABLE[map].apBonus   = 50	-- 10+ (147808: Lesser Adept's Spoils)
 		elseif runTime > 1440 and runTime < 2700 then
 			DUNGEON_TABLE[map].apTier[1] = 300
 			DUNGEON_TABLE[map].apTier[2] = 475
