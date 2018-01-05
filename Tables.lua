@@ -47,7 +47,7 @@ SORT_MEDTHOD['guild'] = function(A, v)
 			else
 				return e.GetMapName(b[v]) > e.GetMapName(a[v])
 			end
-			end)
+		end)
 	else
 		table.sort(A, function(a, b)
 			if AstralKeysSettings.frameOptions.orientation == 0 then

@@ -208,7 +208,6 @@ local function SyncFriendUpdate(entry, sender)
 
 	local _pos = 0
 	while find(entry, '_', _pos) do
-
 		class, dungeonID, keyLevel, week, timeStamp, faction = entry:match(':(%a+):(%d+):(%d+):(%d+):(%d+):(%d+)', entry:find(':', _pos))
 		unit = entry:sub(_pos, entry:find(':', _pos) - 1)
 
@@ -220,7 +219,6 @@ local function SyncFriendUpdate(entry, sender)
 		timeStamp = tonumber(timeStamp)
 
 		if week >= e.Week then
-
 			local id = e.FriendID(unit)
 			if id then
 				if AstralFriends[id][7] < timeStamp then
@@ -446,7 +444,7 @@ local function FriendSort(A, v)
 			else
 				return e.GetMapName(b[v]) > e.GetMapName(a[v])
 			end
-			end)
+		end)
 	else
 		if v == 1 then
 			table.sort(A, function(a, b)
